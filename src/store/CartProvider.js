@@ -11,99 +11,117 @@ const defaultCartState = {
 	totalAmount: 0,
 };
 const cartReducer = (state, action) => {
-	if (action.type === CART_ACTION_CONSTANSTS.ADD_TO_CART) {
-		const item = action.payload;
-		const totalAmount = state.totalAmount + item.amount * item.price;
-		const addItemIndex = state.items.findIndex(meal => meal.id === item.id);
-		let updatedItems = [...state.items];
-		if (addItemIndex !== -1) {
-			updatedItems[addItemIndex].amount =
-				updatedItems[addItemIndex].amount + item.amount;
-		} else {
-			updatedItems = state.items.concat(item);
-		}
+	// if (action.type === CART_ACTION_CONSTANSTS.ADD_TO_CART) {
+	// 	const item = action.payload;
+	// 	const totalAmount = state.totalAmount + item.amount * item.price.toFixed(2);
+	// 	const existingCartItemIndex = state.items.findIndex(
+	// 		meal => meal.id === item.id
+	// 	);
+	// 	const existingCartItem = state.items[existingCartItemIndex];
+	// 	let updatedItems;
 
-		return {
-			...state,
-			totalAmount,
-			items: updatedItems,
-		};
-	}
-
-	if (action.type === CART_ACTION_CONSTANSTS.REMOVE_FROM_CART) {
-		const id = action.payload;
-
-		const items = state.items;
-		let updatedItems = [];
-
-		const removeItemIndex = items.findIndex(item => item.id === id);
-		const totalAmount = state.totalAmount - items[removeItemIndex].price;
-		if (removeItemIndex !== -1) {
-			const amount = items[removeItemIndex].amount;
-			if (amount !== 1) {
-				updatedItems = [...state.items];
-				updatedItems[removeItemIndex].amount =
-					updatedItems[removeItemIndex].amount - 1;
-			} else updatedItems = items.filter(item => item.id !== id);
-		}
-
-		return {
-			...state,
-			items: updatedItems,
-			totalAmount,
-		};
-	}
-
-	return defaultCartState;
-
-	// switch (action.type) {
-	// 	case CART_ACTION_CONSTANSTS.ADD_TO_CART: {
-	// 		const item = action.payload;
-	// 		const totalAmount = state.totalAmount + item.amount * item.price;
-	// 		const addItemIndex = state.items.findIndex(meal => meal.id === item.id);
-	// 		let updatedItems = [];
-	// 		if (addItemIndex !== -1) {
-	// 			updatedItems = [...state.items];
-	// 			updatedItems[addItemIndex].amount =
-	// 				updatedItems[addItemIndex].amount + item.amount;
-	// 		} else {
-	// 			updatedItems = state.items.concat(item);
-	// 		}
-
-	// 		return {
-	// 			...state,
-	// 			totalAmount,
-	// 			items: updatedItems,
+	// 	if (existingCartItem) {
+	// 		const updatedItem = {
+	// 			...existingCartItem,
+	// 			amount: existingCartItem.amount + item.amount,
 	// 		};
+	// 		updatedItems = [...state.items];
+	// 		updatedItems[existingCartItemIndex] = updatedItem;
+	// 	} else {
+	// 		updatedItems = [...state.items, item];
 	// 	}
 
-	// 	case CART_ACTION_CONSTANSTS.REMOVE_FROM_CART: {
-	// 		const id = action.payload;
-
-	// 		const items = state.items;
-	// 		let updatedItems = [];
-
-	// 		const removeItemIndex = items.findIndex(item => item.id === id);
-	// 		const totalAmount = state.totalAmount - items[removeItemIndex].price;
-	// 		if (removeItemIndex !== -1) {
-	// 			const amount = items[removeItemIndex].amount;
-	// 			if (amount !== 1) {
-	// 				updatedItems = [...state.items];
-	// 				updatedItems[removeItemIndex].amount =
-	// 					updatedItems[removeItemIndex].amount - 1;
-	// 			} else updatedItems = items.filter(item => item.id !== id);
-	// 		}
-
-	// 		return {
-	// 			...state,
-	// 			items: updatedItems,
-	// 			totalAmount,
-	// 		};
-	// 	}
-
-	// 	default:
-	// 		return defaultCartState;
+	// 	return {
+	// 		...state,
+	// 		totalAmount,
+	// 		items: updatedItems,
+	// 	};
 	// }
+
+	// if (action.type === CART_ACTION_CONSTANSTS.REMOVE_FROM_CART) {
+	// 	const id = action.payload;
+	// 	const items = state.items;
+
+	// 	const existingCartItemIndex = items.findIndex(item => item.id === id);
+	// 	const existingCartItem = items[existingCartItemIndex];
+	// 	const totalAmount = state.totalAmount - existingCartItem.price;
+	// 	let updatedItems;
+	// 	if (existingCartItem) {
+	// 		if (existingCartItem.amount !== 1) {
+	// 			const updatedItem = {
+	// 				...existingCartItem,
+	// 				amount: existingCartItem.amount - 1,
+	// 			};
+	// 			updatedItems = [...state.items];
+	// 			updatedItems[existingCartItemIndex] = updatedItem;
+	// 		} else updatedItems = items.filter(item => item.id !== id);
+	// 	}
+
+	// 	return {
+	// 		...state,
+	// 		items: updatedItems,
+	// 		totalAmount,
+	// 	};
+	// }
+
+	// return defaultCartState;
+
+	switch (action.type) {
+		case CART_ACTION_CONSTANSTS.ADD_TO_CART: {
+			const item = action.payload;
+			const totalAmount =
+				state.totalAmount + item.amount * item.price.toFixed(2);
+			const existingCartItemIndex = state.items.findIndex(
+				meal => meal.id === item.id
+			);
+			const existingCartItem = state.items[existingCartItemIndex];
+			let updatedItems;
+
+			if (existingCartItem) {
+				const updatedItem = {
+					...existingCartItem,
+					amount: existingCartItem.amount + item.amount,
+				};
+				updatedItems = [...state.items];
+				updatedItems[existingCartItemIndex] = updatedItem;
+			} else {
+				updatedItems = [...state.items, item];
+			}
+
+			return {
+				...state,
+				totalAmount,
+				items: updatedItems,
+			};
+		}
+
+		case CART_ACTION_CONSTANSTS.REMOVE_FROM_CART: {
+			const id = action.payload;
+			const items = state.items;
+
+			const existingCartItemIndex = items.findIndex(item => item.id === id);
+			const existingCartItem = items[existingCartItemIndex];
+			const totalAmount = state.totalAmount - existingCartItem.price;
+			let updatedItems;
+			if (existingCartItem.amount !== 1) {
+				const updatedItem = {
+					...existingCartItem,
+					amount: existingCartItem.amount - 1,
+				};
+				updatedItems = [...state.items];
+				updatedItems[existingCartItemIndex] = updatedItem;
+			} else updatedItems = items.filter(item => item.id !== id);
+
+			return {
+				...state,
+				items: updatedItems,
+				totalAmount,
+			};
+		}
+
+		default:
+			return defaultCartState;
+	}
 };
 
 const CartProvider = ({ children }) => {

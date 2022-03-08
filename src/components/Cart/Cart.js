@@ -6,6 +6,7 @@ import CartItem from './CartItem';
 
 const Cart = ({ onHideCart }) => {
 	const cartCtx = useContext(CartContext);
+	const price = `$${cartCtx.totalAmount.toFixed(2)}`;
 
 	const cartItems = (
 		<ul className={classes['cart-items']}>
@@ -13,7 +14,7 @@ const Cart = ({ onHideCart }) => {
 				<CartItem
 					key={item.id}
 					meal={item}
-					onAdd={cartCtx.addItem.bind(this, item)}
+					onAdd={cartCtx.addItem.bind(null, { ...item, amount: 1 })}
 					onRemove={cartCtx.removeItem.bind(null, item.id)}
 				/>
 			))}
@@ -24,7 +25,7 @@ const Cart = ({ onHideCart }) => {
 			{cartItems}
 			<div className={classes.total}>
 				<span>Total Amount</span>
-				<span>{cartCtx.totalAmount.toFixed(2)}</span>
+				<span>{price}</span>
 			</div>
 			<div className={classes.actions}>
 				<button onClick={onHideCart} className={classes['button--alt']}>
